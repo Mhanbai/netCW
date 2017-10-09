@@ -22,6 +22,7 @@
 // The TCP port number for the server to listen on
 #define SERVERPORT 5555
 
+// The maximum amount of clients the server will accept
 #define MAXCLIENTS 5
 
 
