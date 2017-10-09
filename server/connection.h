@@ -4,6 +4,7 @@
 #define CONNECTION_H
 
 #include <WinSock2.h>
+#include <time.h>
 
 
 // The (fixed) size of message that we send between the two programs
@@ -34,6 +35,7 @@ public:
 	// Call this when the socket is ready to read or write.
 	bool doReadWrite();
 
+	time_t getLastActivity();
 private:
 	// This client's socket.
 	SOCKET sock_;
@@ -42,6 +44,7 @@ private:
 	int readCount_;
 	char readBuffer_[MESSAGESIZE];
 	bool isReading = true;
+	time_t lastActivityTime;
 };
 
 #endif

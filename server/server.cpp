@@ -9,6 +9,7 @@
 #include <cstring>
 #include <list>
 #include <WinSock2.h>
+#include <iostream>////////////////////////////////////////////////////////////////////////////////////////
 
 #include "connection.h"
 #include "utils.h"
@@ -25,9 +26,15 @@
 // The maximum amount of clients the server will accept
 #define MAXCLIENTS 5
 
+// Maximum amount of time to wait for interaction before closing the connection
+#define TIMEOUTSECS 30
+
 
 int main()
 {
+	time_t now;
+	double seconds;
+
 	printf("Echo Server\n");
 
 	startWinSock();
@@ -156,6 +163,19 @@ int main()
 			if (FD_ISSET(conn->sock(), &writable))
 			{
 				dead |= conn->doReadWrite();
+			}
+
+			time(&now);
+			seconds = difftime(now, conn->getLastActivity());
+
+			std::cout << "Now: " << now << std::endl;
+			std::cout << "Last Activity: " << conn->getLastActivity() << std::endl;
+			std::cout << "Seconds between: " << seconds << std::endl;
+
+			if (seconds > TIMEOUTSECS)
+			{
+				printf("Connection timed out.\n");
+				dead = true;
 			}
 
 			if (dead)

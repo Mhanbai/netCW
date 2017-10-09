@@ -14,6 +14,7 @@ Connection::Connection(SOCKET sock)
 	: sock_(sock), readCount_(0)
 {
 	printf("New connection\n");
+	time(&lastActivityTime);
 }
 
 // Destructor.
@@ -46,6 +47,8 @@ bool Connection::wantWrite()
 // Call this when the socket is ready to read.
 bool Connection::doReadWrite()
 {
+	time(&lastActivityTime);
+
 	if (isReading) {
 		// Receive as much data from the client as will fit in the buffer.
 		int spaceLeft = (sizeof readBuffer_) - readCount_;
@@ -95,4 +98,9 @@ bool Connection::doReadWrite()
 		isReading = true;
 		return false;
 	}
+}
+
+time_t Connection::getLastActivity()
+{
+	return lastActivityTime;
 }
